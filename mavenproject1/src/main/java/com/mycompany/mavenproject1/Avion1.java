@@ -14,13 +14,39 @@ public class Avion1 implements Runnable{
     private Aeropuerto1 aeropuerto;
     private String nombre;
     private Random random = new Random();
-    private int capacidadMaximaPasajeros = (100+random.nextInt(200));
+    private int capacidadMaximaPasajeros;
     private int numeroPasajeros;
-    
+
+    public Avion1 (String nombre, Aeropuerto aeropuerto)
+    {
+        this.nombre = nombre;
+        this.aeropuerto = aeropuerto;
+        capacidadMaximaPasajeros = (100+random.nextInt(200));
+        numeroPasajeros = 0;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public int getCapacidadMaximaPasajeros
+    {
+        return capacidadMaximaPasajeros;
+    }
+
+    public int getNumeroPasajeros()
+    {
+        return numeroPasajeros;
+    }
+    public void setNumeroPasajeros(int num)
+    {
+        numeroPasajeros += num;
+    }
     @Override
     public void run() {
-        
-        System.out.println("APARECE EN EL HANGAR");
+
+        aeropuerto.Hangar(this);
+        aeropuerto.areaEstacionamiento(this);
         System.out.println("ESPERANDO PUERTA DE EMBARQUE");
         System.out.println("INGRESANDO PUERTA DE EMBARQUE");
         System.out.println("SUBIENDO PASAJEROS");

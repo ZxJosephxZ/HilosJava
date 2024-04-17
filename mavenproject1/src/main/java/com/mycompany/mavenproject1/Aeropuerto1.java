@@ -22,6 +22,7 @@ public class Aeropuerto1 {
     private Semaphore[] pistas = {new Semaphore(1),new Semaphore(1),new Semaphore(1),new Semaphore(1)};
     private BlockingQueue<String> colaEmbarque = new LinkedBlockingQueue<>();
     private AtomicInteger pasajeros = new AtomicInteger(0);
+    private AtomicInteger numHangar = new AtomicInteger(0);
     
     public Aeropuerto1(String nombre)
     {
@@ -29,9 +30,11 @@ public class Aeropuerto1 {
     }
     
     //Pueden entrar los que sean y aqui se empieza
-    public void Hangar()
+    public void Hangar(Avion1 avion)
     {
-        System.out.println("EMPIEZAN LOS AVIONES TODOS AQUI");
+
+        System.out.println("Entro al hangar el avion"+avion.getNombre());
+        numHangar.incrementAndGet();
     }
     
     //Solo pueden entrar 20aviones simultaneamente
@@ -42,11 +45,19 @@ public class Aeropuerto1 {
         espacioTalleres.release();
         
     }
-    
+
+    public void areaEstacionamiento(Avion1 avion)
+    {
+
+        System.out.println("Ingreso al area de estacionmiento:" + avion.getNombre());
+        numHangar.decrementAddGet();
+        System.out.println("Solicita puerta de embarque:" + avion.getNombre());
+        PuertaEmbarque("avion");
+    }
+
     //cambiar el string por la clase avion
     public void PuertaEmbarque(String avion) throws InterruptedException
     {
-        System.out.println("llego para embarcar"+avion);
         colaEmbarque.put(avion);
         //tomar embarque
         embarque.acquire();
@@ -57,6 +68,33 @@ public class Aeropuerto1 {
         }
         //Simulacion del embarque
         System.out.println("Avión " + avion + " está embarcando...");
+        int i = 0;
+        if (avion.getCapacidadMaxima() > pasajeros)
+        {
+            while ((avion.getCapacidadMaxima() != avion.getNumeroPasajeros()) && i != 3)
+            {
+                System.out.println("Pasajeros insuficientes");
+                if (avion.getCapacidadMaxima() - avion.getNumeroPasajeros() > pasajeros)
+                {
+                    avion.setNumeroPasajeros(pasajeros);
+                    Thread.sleep(1000+random.nextInt(4000));
+                    aeropuerto.subirAvionPasajeros(pasajeros);
+                }
+                else
+                {
+                    avion.setNumeroPasajeros(avion.getCapacidadMaxima() - avion.getNumeroPasajeros());
+                    Thread.sleep(1000+random.nextInt(4000));
+                    aeropuerto.subirAvionPasajeros(avion.getCapacidadMaxima() - avion.getNumeroPasajeros());
+                }
+                System.out.println("Subiendo pasajeros....");
+                Thread.sleep(1000+random.nextInt(3000));
+                i++;
+            }
+        }
+        avion.setNumeroPasajeros(avion.getCapacidadMaxima());
+        Thread.sleep(1000+random.nextInt(4000));
+        aeropuerto.subirAvionPasajeros(avion.getCapacidadMaxima());
+
         //liberar puerta de embarque
         embarque.release();
         System.out.println("Avión " + avion + " ha embarcado y liberado la puerta de embarque.");
@@ -112,10 +150,7 @@ public class Aeropuerto1 {
     }
     
     //Pueden entrar los que sean
-    public void areaEstacionamiento()
-    {
-        System.out.println("ENTRAN CUALQUIER AVION");
-    }
+
     
     //Pueden entrar los que sean
     public void areaRodaje()
@@ -130,7 +165,7 @@ public class Aeropuerto1 {
 
     public void añadirPasajeros(int numPasajeros)
     {
-        pasajeros += numPasajeros;
+        pasajeros.addAndGet(numPasajeros);
         System.out.println("NUMERO DE PASAJEROS EN EL AEROPUERTO" + pasajeros);
     }
 
@@ -141,7 +176,15 @@ public class Aeropuerto1 {
         {
             int numero = random.nextInt(50)+1;
         }
-        pasajero -= numero;
+        pasajero.addAndGet(-numero);
         return (numero);
+    }
+    public void subirAvionPasajeros(int numero)
+    {
+        pasajero.addAndGet(-numero);
+    }
+    public void bajarAvionPasajeros(int numero)
+    {
+        pasajero.addAndGet(numero);
     }
 }
