@@ -47,6 +47,7 @@ public class Avion1 implements Runnable{
 
         aeropuerto.Hangar(this);
         aeropuerto.areaEstacionamiento(this);
+        aeropuerto.areRodaje(this);
         System.out.println("ESPERANDO PUERTA DE EMBARQUE");
         System.out.println("INGRESANDO PUERTA DE EMBARQUE");
         System.out.println("SUBIENDO PASAJEROS");

@@ -153,9 +153,10 @@ public class Aeropuerto1 {
 
     
     //Pueden entrar los que sean
-    public void areaRodaje()
+    public void areaRodaje(Avion1 avion)
     {
-        System.out.println("ENTRAN CUALQUIER AVION");
+        System.out.println("Ingresando ha area de rodaje:"+avion.getNombre());
+        
     }
     
     public void aerovias()
