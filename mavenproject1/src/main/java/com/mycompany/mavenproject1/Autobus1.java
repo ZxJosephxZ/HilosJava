@@ -18,6 +18,13 @@ public class Autobus1 implements Runnable{
     private Aeropuerto1 aeropuerto;
     private Random random = new Random();
     private int numeroPasajeros;
+
+    public Autobus1(String nombre, Aeropuerto1 aeropuerto)
+    {
+        this.nombre = nombre;
+        this.aeropuerto = aeropuerto;
+        numeroPasajeros = 0;
+    }
     @Override
     public void run() {
         try {
@@ -30,9 +37,11 @@ public class Autobus1 implements Runnable{
             Thread.sleep(5000+random.nextInt(5000));
             System.out.println("LLEGADA AL AEROPUERTO");
             //METODO PARA AÑADIR LOS PASAJEROS
+            aeropuerto.añadirPasajeros(numeroPasajeros);
             System.out.println("se bajaron"+numeroPasajeros);
             System.out.println("ESPERANDO A QUE SUBAN PASAJEROS...");
             //numeroPasajeros = subirpasajerosdelaeropuerto
+            numeroPasajeros = subirAutosPasajeros();
             Thread.sleep(2000+random.nextInt(3000));
             System.out.println("INICIA RECORRIDO HA CIUDAD...");
             Thread.sleep(5000+random.nextInt(5000));

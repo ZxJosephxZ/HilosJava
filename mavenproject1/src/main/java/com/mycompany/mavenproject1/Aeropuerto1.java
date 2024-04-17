@@ -127,4 +127,21 @@ public class Aeropuerto1 {
     {
         System.out.println("SOLO PUEDEN VER 2");
     }
+
+    public void añadirPasajeros(int numPasajeros)
+    {
+        pasajeros += numPasajeros;
+        System.out.println("NUMERO DE PASAJEROS EN EL AEROPUERTO" + pasajeros);
+    }
+
+    public int subirAutobusPasajeros()
+    {
+        int numero = random.nextInt(50)+1;
+        while (pasajeros < numero)
+        {
+            int numero = random.nextInt(50)+1;
+        }
+        pasajero -= numero;
+        return (numero);
+    }
 }
