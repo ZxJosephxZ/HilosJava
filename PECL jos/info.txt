@@ -1,0 +1,102 @@
+Método establecerConexion()
+Descripción
+Este método se encarga de establecer una conexión con un servidor remoto utilizando sockets TCP/IP. En caso de que la conexión no pueda ser establecida, se imprime el rastreo de la pila de errores.
+
+Parámetros
+Ninguno.
+
+Excepciones
+IOException: Se lanza si ocurre un error durante el intento de conexión con el servidor.
+
+
+
+Método iniciar()
+Descripción
+Este método inicia un hilo para recibir y procesar mensajes del servidor. Utiliza un bucle infinito para leer continuamente mensajes del servidor a través del socket establecido. Cada mensaje recibido se procesa mediante la función ControlPista().
+
+Parámetros
+Ninguno.
+
+Excepciones
+Exception: Se lanza si ocurre un error durante el proceso de lectura de mensajes del servidor.
+
+
+Método ControlPista(String data)
+Descripción
+Este método se encarga de controlar el estado de una pista de aterrizaje basado en los datos recibidos del servidor. Los datos se reciben como una cadena y se dividen en partes utilizando el delimitador :. Se espera que los datos tengan tres partes separadas por :: un identificador, un valor booleano y un identificador de aeropuerto. Si los datos recibidos no tienen el formato esperado, se imprime un mensaje de error. Si el identificador de aeropuerto coincide con el identificador de la instancia del objeto actual, se llama al método BlockAndOpen() para controlar el estado de la pista.
+
+Parámetros
+data: Una cadena que contiene los datos recibidos del servidor.
+Excepciones
+NumberFormatException: Se lanza si no se puede convertir alguna parte de los datos a un formato numérico.
+
+
+Método BlockAndOpen(int identifier, boolean value)
+Descripción
+Este método se encarga de controlar el estado de una pista de aterrizaje específica. Si el identificador de la pista está dentro del rango válido, actualiza el estado de esa pista según el valor booleano proporcionado. Si el identificador está fuera del rango válido, se imprime un mensaje de error.
+
+Parámetros
+identifier: Un entero que representa el identificador de la pista de aterrizaje.
+value: Un valor booleano que indica si la pista debe bloquearse (true) o abrirse (false).
+
+
+Método enviarDatosPorSocket(String data)
+Descripción
+Este método se encarga de enviar datos al servidor a través del socket establecido. Primero verifica si hay una conexión válida con el servidor. Si no hay una conexión establecida o el socket está cerrado, se imprime un mensaje de advertencia y se interrumpe la operación de envío de datos. Luego, utiliza un objeto PrintWriter para enviar los datos proporcionados al servidor.
+
+Parámetros
+data: Una cadena que contiene los datos que se enviarán al servidor.
+Excepciones
+IOException: Se lanza si ocurre un error durante el proceso de envío de datos al servidor.
+
+
+CLASE SERVIDOR:
+
+Método crearInterfazGrafica()
+Descripción
+Este método estático se encarga de crear y inicializar una interfaz gráfica. Inicializa un mapa que contiene objetos JTextField para diferentes campos de la interfaz gráfica, como datos relacionados con hangares, pasajeros, rodaje, taller, estacionamiento y aerovías. Luego, utiliza este mapa para crear una instancia de la clase InterfazGrafica, que representa la interfaz gráfica completa.
+
+Retorno
+Una instancia de InterfazGrafica que representa la interfaz gráfica creada.
+
+
+Método iniciarServidorSocket(InterfazGrafica interfaz)
+Descripción
+Este método estático se encarga de iniciar un servidor socket que escucha en el puerto 8081. Una vez iniciado el servidor, acepta conexiones de clientes de forma continua en un bucle infinito. Para cada conexión aceptada, se crea una instancia de ClientHandler que gestiona las comunicaciones con el cliente asociado a través del socket. Además, se asigna esta instancia de ClientHandler a la interfaz gráfica para que pueda comunicarse con ella.
+
+Parámetros
+interfaz: Una instancia de la clase InterfazGrafica que representa la interfaz gráfica del servidor.
+Excepciones
+IOException: Se lanza si ocurre un error durante el proceso de escucha de conexiones en el servidor socket.
+
+
+CLASE CLIENTE HANDLER:
+
+Método SolicitarCliente(String mensaje)
+Descripción
+Este método se encarga de enviar un mensaje al cliente conectado a través del socket. Primero, establece un flujo de salida (PrintWriter) para enviar datos al cliente. Luego, envía el mensaje proporcionado al cliente a través de este flujo de salida. Finalmente, cierra el flujo de salida y el socket después de enviar el mensaje.
+
+Parámetros
+mensaje: Una cadena que contiene el mensaje que se enviará al cliente.
+Excepciones
+IOException: Se lanza si ocurre un error durante el proceso de envío de datos al cliente.
+
+
+Método run()
+Descripción
+Este método implementa la lógica principal para manejar la comunicación con un cliente. Utiliza un bucle para leer continuamente líneas de entrada del cliente a través de un BufferedReader asociado al socket. Cada línea recibida se procesa para extraer un identificador y datos asociados. Si el formato de la línea recibida es válido, se actualiza el campo de texto correspondiente en la interfaz gráfica utilizando el método updateTextField(). Si el formato no es válido, se imprime un mensaje de error.
+
+CLASE INTERFAZ
+
+Método updateTextField(String identifier, String data)
+Descripción
+Este método se encarga de actualizar un campo de texto específico en la interfaz gráfica con un nuevo valor. Primero, obtiene el campo de texto correspondiente del mapa de campos de texto utilizando el identificador proporcionado. Luego, comprueba si el identificador es "AeroviaM_B" o "AeroviaB_M" para actualizar el campo de texto directamente con el valor proporcionado. Si el identificador no corresponde a "AeroviaM_B" o "AeroviaB_M", interpreta el valor como un número y lo suma o resta al valor actual del campo de texto, según el signo del valor recibido. Finalmente, actualiza el campo de texto con el nuevo valor.
+
+Parámetros
+identifier: Una cadena que representa el identificador del campo de texto que se actualizará.
+data: Una cadena que representa el nuevo valor que se asignará al campo de texto.
+
+
+Método asociarCamposDeTexto()
+Descripción
+Este método se encarga de asociar los campos de texto de la interfaz gráfica con sus respectivos identificadores en el mapa de campos de texto (textFieldsMap). Además, inicializa los valores de los campos de texto con "0".
